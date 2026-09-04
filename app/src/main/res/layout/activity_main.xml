@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0FDF4"
+    tools:context=".MainActivity">
+
+    <!-- TELA 1: DASHBOARD -->
+    <ScrollView
+        android:id="@+id/layoutDashboard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomNavigation">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Análise Eletroquímica - IA"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="#065F46"
+                android:gravity="center"
+                android:layout_marginBottom="8dp" />
+
+            <!-- INDICADOR DE STATUS DO FIRMWARE -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="16dp">
+
+                <!-- Ponto indicador verde com efeito visual -->
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="@drawable/rounded_green_dot"
+                    android:layout_marginEnd="8dp"/>
+
+                <TextView
+                    android:id="@+id/txtStatusFirmware"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Firmware Conectado (Sensor Ativo)"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="#047857" />
+            </LinearLayout>
+
+            <!-- SELETOR DE TÉCNICA -->
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggleGroupTecnica"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="center"
+                app:singleSelection="true"
+                app:checkedButton="@+id/btnVOQ">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnVOQ"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="VOQ (Corrente/Potencial)"
+                    android:textSize="11sp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEIE"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="EIE (Impedância)"
+                    android:textSize="11sp"/>
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <!-- Card: Espaço do Gráfico com Rótulos Ip e Ep -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:strokeColor="#A7F3D0"
+                app:strokeWidth="1dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/txtTituloGrafico"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Curva: Corrente vs Potencial"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#065F46"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Container com os Rótulos dos Eixos -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="240dp">
+
+                        <!-- Eixo Y (Ip) -->
+                        <TextView
+                            android:id="@+id/labelEixoY"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Ip (µA)"
+                            android:textSize="12sp"
+                            android:textColor="#047857"
+                            android:textStyle="bold"
+                            android:rotation="-90"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginStart="-12dp" />
+
+                        <!-- Gráfico -->
+                        <com.github.mikephil.charting.charts.LineChart
+                            android:id="@+id/lineChart"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:layout_toEndOf="@id/labelEixoY"
+                            android:layout_above="@id/labelEixoX"
+                            android:background="@drawable/rounded_chart_bg" />
+
+                        <!-- Eixo X (Ep) -->
+                        <TextView
+                            android:id="@+id/labelEixoX"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Ep (V)"
+                            android:textSize="12sp"
+                            android:textColor="#047857"
+                            android:textStyle="bold"
+                            android:layout_alignParentBottom="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="4dp" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- CARD 1: Parâmetros Extraídos -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="#ECFDF5"
+                app:strokeColor="#A7F3D0"
+                app:strokeWidth="1dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Parâmetros Extraídos"
+                        android:textSize="14sp"
+                        android:textColor="#047857"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/txtParametro1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Ip (Corrente de Pico): -- µA"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#065F46"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/txtParametro2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Ep (Potencial de Pico): -- V"
+                        android:textSize="14sp"
+                        android:textColor="#059669" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- CARD 2: Hipótese de Diagnóstico (IA) -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="#D1FAE5"
+                app:strokeColor="#6EE7B7"
+                app:strokeWidth="1dp"
+                android:layout_marginBottom="24dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Hipótese de Diagnóstico (IA)"
+                        android:textSize="14sp"
+                        android:textColor="#065F46"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/txtDiagnosticoValor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Aguardando leitura..."
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="#064E3B"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/txtDiagnosticoDetalhe"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Execute a leitura para analisar a amostra."
+                        android:textSize="14sp"
+                        android:textColor="#047857" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Botão de Ação -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnProcessarGrafico"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="Executar Leitura (VOQ)"
+                android:textSize="16sp"
+                app:backgroundTint="#059669"
+                app:cornerRadius="8dp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- TELA 2: BASE DE DADOS -->
+    <LinearLayout
+        android:id="@+id/layoutDatabase"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomNavigation"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@android:drawable/ic_menu_save"
+            app:tint="#059669"
+            android:layout_marginBottom="16dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Inserção na Base de Dados"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#065F46" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gerenciamento de curvas de referência."
+            android:layout_marginTop="8dp"
+            android:textColor="#047857" />
+    </LinearLayout>
+
+    <!-- TELA 3: HISTÓRICO -->
+    <LinearLayout
+        android:id="@+id/layoutHistory"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomNavigation"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@android:drawable/ic_menu_recent_history"
+            app:tint="#059669"
+            android:layout_marginBottom="16dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Histórico de Medições"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#065F46" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Análises anteriores do biossensor."
+            android:layout_marginTop="8dp"
+            android:textColor="#047857" />
+    </LinearLayout>
+
+    <!-- BARRA DE NAVEGAÇÃO INFERIOR -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
+        app:elevation="8dp"
+        app:itemIconTint="#059669"
+        app:itemTextColor="#059669"
+        app:menu="@menu/nav_menu" />
+
+</RelativeLayout>
